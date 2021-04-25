@@ -1,4 +1,35 @@
-#include "List.h"
+#include <stdio.h>
+#include <malloc.h>
+
+typedef struct Node {
+	int val;
+	struct Node *next;
+}Node;
+
+typedef struct List {
+	Node *head;
+	Node *last;
+	int size;
+}List;
+
+void init(List *list);
+void firstAdd(List *list);
+void lastAdd(List *list);
+Node* get(List *list, int pos);
+void remove(List *list, int key);
+int size(List *list);
+void show(List *list);
+List ff(List *list, int key);
+
+
+void main() {
+	List list;
+	init(&list);
+	lastAdd(&list);
+	show(&list);
+	list = ff(&list, 3);
+	show(&list);
+}
 
 void init(List *list) {
 	list->last = list->head = (Node *)malloc(sizeof(Node));
@@ -42,7 +73,7 @@ Node* get(List *list, int pos) {
 	}
 	Node *p = list->head->next;
 	int i = 0;
-	while (p != NULL &&i < pos - 1) {
+	while (p != NULL && i < pos - 1) {
 		p = p->next;
 		i++;
 	}

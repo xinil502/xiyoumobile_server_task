@@ -1,7 +1,48 @@
-#include "Stack.h"
+#include <stdio.h>
+#include <malloc.h>
+#include <stdbool.h>
+
 
 //初始化最大栈
 int max = -2147483647;
+
+typedef struct SNode {
+	int val;
+	struct SNode *next;
+}SNode;
+
+typedef struct Stack {
+	SNode *top;
+	SNode *bottom;
+}Stack;
+
+void show(Stack *s);
+void init(Stack *s);
+void push(Stack *s, Stack *m, int key);
+void push(Stack *m, int key);
+SNode* peek(Stack *s);
+SNode* pop(Stack *s, Stack *m);
+void pop(Stack *m, int max);
+bool isEmpty(Stack *s);
+void getMin(Stack *s);
+
+int main() {
+	Stack s;
+	Stack m;
+	init(&s);
+	init(&m);
+	int input;
+	while (scanf_s("%d", &input), input != -1) {
+		push(&s, &m, input);
+	}
+	for (int i = 0; i < 3; ++i) {
+		show(&s);
+		pop(&s, &m);
+		getMin(&m);
+	}
+}
+
+
 void init(Stack *s) {
 	s->top = s->bottom = (SNode *)malloc(sizeof(SNode));
 	s->top->next = NULL;
@@ -84,7 +125,7 @@ void show(Stack *s) {
 }
 
 void getMin(Stack *m) {
-	if(m->top)
+	if (m->top)
 		printf("Max = %d\n", m->top->val);
 	else {
 		printf("空栈！\n");
