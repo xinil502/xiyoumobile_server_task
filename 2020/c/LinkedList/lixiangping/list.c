@@ -152,14 +152,6 @@ int main()
 	Show(&L);
 	L=insert(&L,3);
 	Show(&L);
-	/*
-	printf("单链表的长度为%d\n",size(&L));
-	get(L, 5, &m);
-	printf("得到的元素值为：%d\n", m);
-	removes(&L, 3, &m);
-	printf("删除元素后的");
-	ShowList(&L);
-	printf("删除的元素值为：%d\n", m);
-	*/
+	
 	return 0;
 }
