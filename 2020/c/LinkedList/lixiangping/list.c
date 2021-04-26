@@ -6,152 +6,128 @@ typedef struct Node
 	elemtype data;
 	struct Node *next;
 }Node;
-typedef struct Node *LinkList;
+typedef struct List{
+	Node *head;
+	Node *last;
+	int size;
+}List;
 
-int InitList(LinkList *L)						
+int Init(List *L)						
 {
-	(*L) = (LinkList)malloc(sizeof(Node));
-	if (!L)
-	{
-		printf("·ÖÅäÄÚ´æÊ§°Ü£¡\n");
-		exit(0);
-	}
-	(*L)->next = NULL;
-	return 0;
+	L->head=L->last=(Node *)malloc(sizeof(Node));
+	L->last->next=NULL;
+	L->size=0;
 }
 
-void firstAdd(LinkList *L)		
+void firstAdd(List *L)		
 {
-	int i, n;
-	LinkList p;
-	(*L) = (LinkList)malloc(sizeof(Node));
-	(*L)->next = NULL;
-	printf("ÇëÊäÈëÄúÒª²åÈëÔªËØµÄ¸öÊı£º");
-	scanf("%d", &n);
-	printf("ÇëÊäÈëÄãÒª²åÈëµÄÔªËØÖµ(ÓÃ¿Õ¸ñ¸ô¿ª)£º");
-	for (i = 0; i < n; i++)
+	int data;
+	
+	while(scanf("%d",&data),data!=0)
 	{
-		p = (LinkList)malloc(sizeof(Node));
-		scanf("%d", &p->data);
-		p->next = (*L)->next;
-		(*L)->next = p;
+		Node *t=(Node*)malloc(sizeof(Node));
+		t->data=data;
+		t->next=NULL;
+		t->next=L->head->next;
+		L->head->next=t;
+		L->size++;
+		if(L->size==0)
+		L->last=t;
+	
 	}
 }
 
-void lastAdd(LinkList *L)			
+void lastAdd(List *L)			
 {
-	int i, n;
-	LinkList p,r;
-	(*L) = (LinkList)malloc(sizeof(Node));
-	r = *L;
-	printf("ÇëÊäÈëÄúÒª²åÈëÔªËØµÄ¸öÊı£º");
-	scanf("%d", &n);
-	printf("ÇëÊäÈëÄãÒª²åÈëµÄÔªËØÖµ(ÓÃ¿Õ¸ñ¸ô¿ª)£º");
-	for (i = 0; i < n; i++)
+int data;
+	while(scanf("%d",&data),data!=0)
 	{
-		p = (LinkList)malloc(sizeof(Node));
-		scanf("%d", &p->data);
-		r->next = p;
-		r = p;
+		Node *t=(Node*)malloc(sizeof(Node));
+		t->data=data;
+		t->next=NULL;
+		L->last->next=t;
+		L->size++;
+		L->last=t;
+	
 	}
-	r->next = NULL;
 }
 
-int size(LinkList *L)				
+int size(List *L)				
 {
-	int length = 0;
-	LinkList p;
-	p = (*L)->next;
-	while (p)
-	{
-		length++;
-		p = p->next;
-	}
-	return length;
+	return L->size;
 }
 
-int get(LinkList L, int i, elemtype *e)			
+Node* get(List *L, int i)			
 {
-	int j = 1;
-	LinkList p;
-	p = L->next;
-	while (p && j < i)
+	if(i==0)
+	return L->head->next;
+	Node *p=L->head->next;
+	int j=0;
+	while(p!=NULL&&j<i-1)
 	{
-		p = p->next;
-		++j;
-	}
-	if (!p || j > i)
-	{
-		printf("²éÑ¯²»µ½¸ÃÔªËØ£¡\n");
-		return 0;
-	}
-	*e = p->data;
-	return 0;
+		p=p->next;
+		j++;
+	 } 
+	 return p;
 }
 
 
-void removes(LinkList *L, int i, elemtype *e)				
+void removes(List *L, int i)				
 {
-	LinkList p, q;
-	int j = 1;
-	p = *L;
-	while (p->next && j < i)
+	if(L->size==0)
+	return ;
+	Node *t=L->head;
+	while(t->next)
 	{
-		p = p->next;
-		++j;
+		if(t->next->data==i)
+		{
+			Node *s=t->next;
+			t->next=s->next;
+			free(s);
+		}
+		t=t->next;
 	}
-	if (!(p->next) || j > i)
-	{
-		printf("É¾³ıÔªËØÊ§°Ü£¡\n");
-		return;
-	}
-	q = p->next;
-	p->next = q->next;
-	*e = q->data;
-	free(q);
-	return;
+	
 }
 
 
 
-void ShowList(LinkList *L)					//´òÓ¡Õû¸öÁ´±í
+void Show(List *L)					//æ‰“å°æ•´ä¸ªé“¾è¡¨
 {
-	LinkList p;
-	p = (*L)->next;
-	if (p == NULL)
+	Node *t=L->head->next;
+	while(t)
 	{
-		printf("ÕâÊÇÒ»¸ö¿ÕÁ´±í£¡\n");
+		printf("%d ",t->data);
+		t=t->next;
 	}
-	printf("µ¥Á´±í");
-	while (p)
-	{
-		printf(" -> %d", p->data);
-		p = p->next;
-	}
-	printf("\n");
+	printf("end\n");
 }
-void insert(LinkList head, int x){
-   /* Node*s=(Node *)malloc(sizeof(Node));
-    Node*t=(Node *)malloc(sizeof(Node));
-    Node*p1=s;
-   Node*p2=t;
-   
-    while(head){
-        if(head->data<x){
-            p1->next=head;
-            p1=p1->next;
+
+List insert(List *L, int x){
+   List pre;
+   List behind;
+   Init(&pre);
+   Init(&behind);
+   Node *p=L->head->next;
+    while(p){
+        if(p->data<x){
+            pre.last->next=p;
+            pre.last=p;
+            pre.size++;
         }
         else{
-            p2->next=head;
-            p2=p2->next;
+            behind.last->next=p;
+            behind.last=p;
+            behind.size++;
         }
-        head=head->next;
+        p=p->next;
     }
-  p2->next=NULL;
-    p1->next=t->next->next;
-    return s;
-    */
-	LinkList t=head->next;
+  pre.last->next=NULL;
+  behind.last->next=NULL;
+    pre.last->next=behind.head->next;
+    return pre;
+    
+/*	LinkList t=head->next;
 	LinkList s=head->next;
     while(t)
     {
@@ -165,28 +141,25 @@ void insert(LinkList head, int x){
 			printf("%d ",s->data);
 			s=s->next;
 	}
-
+*/
 }
 
 int main()
 {
-	LinkList L;
-	InitList(&L);
-	int k,i;
-	elemtype m ;
+	List L;
+	Init(&L);
 	lastAdd(&L);
+	Show(&L);
+	L=insert(&L,3);
+	Show(&L);
 	/*
-	printf("µ¥Á´±íµÄ³¤¶ÈÎª%d\n",size(&L));
+	printf("å•é“¾è¡¨çš„é•¿åº¦ä¸º%d\n",size(&L));
 	get(L, 5, &m);
-	printf("µÃµ½µÄÔªËØÖµÎª£º%d\n", m);
+	printf("å¾—åˆ°çš„å…ƒç´ å€¼ä¸ºï¼š%d\n", m);
 	removes(&L, 3, &m);
-	printf("É¾³ıÔªËØºóµÄ");
+	printf("åˆ é™¤å…ƒç´ åçš„");
 	ShowList(&L);
-	printf("É¾³ıµÄÔªËØÖµÎª£º%d\n", m);
+	printf("åˆ é™¤çš„å…ƒç´ å€¼ä¸ºï¼š%d\n", m);
 	*/
-	
-	insert(L,3);
-//	ShowList(&L);
 	return 0;
 }
-
