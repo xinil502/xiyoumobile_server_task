@@ -126,9 +126,6 @@ int main() {
 	  {
 	  	Push(s,x);
 	   } 
-	  
-	 /*top= minStackTop(&s);
-	 minStackPop(&s);*/
 	 maxs=getMin(s);
 	 printf("%d",maxs);
 	 
